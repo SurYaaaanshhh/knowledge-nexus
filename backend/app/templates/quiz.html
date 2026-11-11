@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">QUIZ PRACTICE</p><h1>Practice source-backed facts</h1><p class="muted">Questions are generated only from verified facts in your PDFs.</p></section>
+<section class="panel">
+  <form action="/quiz/generate" method="post" class="filter-form">
+    <label>Topic<select name="topic"><option value="">Mixed topics</option>{% for item in topics %}<option value="{{ item }}" {% if item == topic %}selected{% endif %}>{{ item }}</option>{% endfor %}</select></label>
+    <label>Questions<select name="count">{% for number in [5,10,20] %}<option value="{{ number }}" {% if number == count %}selected{% endif %}>{{ number }}</option>{% endfor %}</select></label>
+    <button class="button button-primary" type="submit">Generate quiz</button>
+  </form>
+  {% if message %}<p class="notice">{{ message }}</p>{% endif %}
+  {% if score is not none %}<p class="score">Your score: {{ score }} / {{ total }}</p>{% endif %}
+</section>
+{% if questions %}<form action="/quiz/submit" method="post"><input type="hidden" name="quiz_id" value="{{ quiz_id }}">
+  {% for question in questions %}{% set question_index = loop.index0 %}<article class="panel question"><h2>{{ loop.index }}. {{ question.question }}</h2>
+    {% if question.options %}<div class="choice-list">{% for option in question.options %}<label><input type="radio" name="answer_{{ question_index }}" value="{{ option }}"> {{ option }}</label>{% endfor %}</div>
+    {% else %}<input class="answer-input" name="answer_{{ question_index }}" placeholder="Type your answer">{% endif %}
+    <a class="source-link" href="{{ question.citation.source_url }}">Source: {{ question.citation.document_name }}, page {{ question.citation.page_number }}</a>
+  </article>{% endfor %}
+  <button class="button button-primary" type="submit">Submit answers</button>
+</form>{% endif %}
+{% endblock %}

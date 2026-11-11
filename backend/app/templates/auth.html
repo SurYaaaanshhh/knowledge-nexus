@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ "Create account" if mode == "register" else "Sign in" }} · Knowledge Nexus{% endblock %}
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-hero">
+    <p class="eyebrow">YOUR STUDY WORKSPACE</p>
+    <h1>Turn your PDFs into knowledge you can revisit.</h1>
+    <p>Keep source-backed facts, documents, and study progress together in one private workspace.</p>
+    <span class="auth-foot">Every account has its own documents and study data.</span>
+  </div>
+  <div class="auth-form">
+    <p class="eyebrow">{{ "GET STARTED" if mode == "register" else "WELCOME BACK" }}</p>
+    <h2>{{ "Create your account" if mode == "register" else "Sign in" }}</h2>
+    <p class="muted">{{ "Create a private workspace for your PDFs and progress." if mode == "register" else "Sign in to continue to your study workspace." }}</p>
+    {% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+    <form method="post" action="/{{ mode }}" class="stack">
+      {% if mode == "login" %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></label>
+      <label>Password<input name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" required minlength="10" maxlength="128" placeholder="At least 10 characters"></label>
+      {% if mode == "register" %}<label>Confirm password<input name="confirmation" type="password" autocomplete="new-password" required minlength="10" maxlength="128"></label>{% endif %}
+      <button class="button button-primary button-wide" type="submit">{{ "Create account" if mode == "register" else "Sign in" }}</button>
+    </form>
+    <p class="auth-switch">
+      {% if mode == "register" %}Already have an account? <a href="/login">Sign in</a>
+      {% else %}New to Knowledge Nexus? <a href="/register">Create an account</a>{% endif %}
+    </p>
+  </div>
+</section>
+{% endblock %}

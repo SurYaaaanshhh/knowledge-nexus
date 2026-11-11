@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">SOURCE READER</p><h1>Read and verify your PDFs</h1><p class="muted">Every extracted fact links back to its source document and page.</p></section>
+{% if documents %}
+<form action="/reader" method="get" class="filter-form"><label>Document<select name="doc">{% for doc in documents %}<option value="{{ doc.id }}" {% if selected and selected.id == doc.id %}selected{% endif %}>{{ doc.filename }}</option>{% endfor %}</select></label><button class="button button-secondary" type="submit">Open</button></form>
+{% endif %}
+{% if selected %}
+<div class="columns reader-columns">
+  <section class="panel">
+    <div class="section-heading"><h2>{{ selected.filename }}</h2><a target="_blank" rel="noreferrer" href="/api/documents/{{ selected.id }}/file">Open PDF ↗</a></div>
+    <iframe class="pdf-frame" title="PDF preview: {{ selected.filename }}" src="/reader/{{ selected.id }}/pdf#page={{ page }}"></iframe>
+    <form action="/reader" method="get" class="filter-form"><input type="hidden" name="doc" value="{{ selected.id }}"><label>Find related facts<input name="q" value="{{ q }}" placeholder="Type a name, phrase, or selected text"></label><button class="button button-secondary" type="submit">Search</button></form>
+    {% if q and related %}<h3>Magic Click results</h3>{% for result in related %}<div class="fact"><strong>{{ result.title }}</strong><p>{{ result.snippet }}</p><a href="/reader?doc={{ result.document_id }}&page={{ result.page_number }}">Source: {{ result.document_name }}, page {{ result.page_number }}</a></div>{% endfor %}
+    {% elif q %}<p class="empty">No related facts found for “{{ q }}”.</p>{% endif %}
+  </section>
+  <section class="panel"><h2>Verified facts</h2>
+    {% if facts %}{% for fact in facts %}<article class="fact"><div class="fact-title"><strong>{{ fact.subject }} {{ fact.relation|lower|replace("_", " ") }} {{ fact.object }}</strong><span class="tag">{{ fact.topic }}</span></div><p>{{ fact.evidence }}</p><a href="/reader?doc={{ selected.id }}&page={{ fact.page_number }}">View source · page {{ fact.page_number }}</a></article>{% endfor %}
+    {% else %}<p class="empty">No supported facts have been extracted from this PDF yet.</p>{% endif %}
+  </section>
+</div>
+{% else %}<section class="panel empty">No PDFs available. <a href="/library">Upload a PDF</a> to begin.</section>{% endif %}
+{% endblock %}

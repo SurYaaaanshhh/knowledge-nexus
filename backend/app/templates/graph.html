@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">KNOWLEDGE GRAPH</p><h1>Explore connected concepts</h1><p class="muted">Relationships are stored in your private SQLite knowledge graph.</p></section>
+<section class="stats"><article class="stat"><span>Nodes</span><strong>{{ nodes|length }}</strong></article><article class="stat"><span>Connections</span><strong>{{ edges|length }}</strong></article></section>
+<div class="columns">
+  <section class="panel"><h2>Concepts</h2>{% if nodes %}<div class="tag-list">{% for node in nodes %}<a class="tag" href="/graph?entity={{ node.label|urlencode }}">{{ node.label }} <small>{{ node.node_type }}</small></a>{% endfor %}</div>{% else %}<p class="empty">Upload PDFs to build your graph.</p>{% endif %}</section>
+  <section class="panel"><h2>Relationships</h2>{% if edges %}<div class="table-wrap"><table><thead><tr><th>From</th><th>Relationship</th><th>To</th></tr></thead><tbody>{% for edge in edges %}<tr><td>{{ edge.source|replace("_", " ") }}</td><td>{{ edge.label|replace("_", " ")|lower }}</td><td>{{ edge.target|replace("_", " ") }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="empty">No graph relationships yet.</p>{% endif %}</section>
+</div>
+{% if entity %}<section class="panel"><div class="section-heading"><h2>Facts for {{ entity }}</h2><a href="/graph">Clear selection</a></div>
+  {% if entity_facts %}{% for fact in entity_facts %}<article class="fact"><strong>{{ fact.subject }} {{ fact.relation|lower|replace("_", " ") }} {{ fact.object }}</strong><p>{{ fact.evidence }}</p><a href="{{ fact.source_url }}">Source: {{ fact.filename }}, page {{ fact.page_number }}</a></article>{% endfor %}
+  {% else %}<p class="empty">No supported facts found for this concept.</p>{% endif %}
+</section>{% endif %}
+{% endblock %}

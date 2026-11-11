@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">FLASHCARDS</p><h1>Review and remember</h1><p class="muted">Create cards from verified facts and track what needs another look.</p></section>
+<section class="panel"><form action="/flashcards/generate" method="post" class="filter-form"><label>Topic<select name="topic"><option value="">All topics</option>{% for topic in topics %}<option value="{{ topic }}">{{ topic }}</option>{% endfor %}</select></label><button class="button button-primary" type="submit">Generate / refresh cards</button></form></section>
+{% if cards %}<div class="card-grid">{% for card in cards %}<article class="panel flashcard"><span class="tag">{{ card.topic }}</span><h2>{{ card.question }}</h2><details><summary>Reveal answer</summary><p class="answer">{{ card.answer }}</p><a href="{{ card.source_url }}">Source: {{ card.document_name }}, page {{ card.page_number }}</a></details><form action="/flashcards/{{ card.id }}" method="post" class="row-actions"><button class="button button-secondary button-small" name="status" value="remembered">Remembered</button><button class="button button-quiet button-small" name="status" value="needs_revision">Needs revision</button></form><small class="muted">Current status: {{ card.review_status|replace("_", " ") }}</small></article>{% endfor %}</div>
+{% else %}<section class="panel empty">No flashcards yet. Generate cards after uploading a PDF.</section>{% endif %}
+{% endblock %}

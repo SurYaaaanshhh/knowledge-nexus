@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">YOUR STUDY PROGRESS</p><h1>Track learning over time</h1><p class="muted">Progress belongs to your account and is based on actual study activity.</p></section>
+<section class="stats">
+  <article class="stat"><span>Topics</span><strong>{{ progress.total_topics }}</strong></article><article class="stat"><span>Completed</span><strong>{{ progress.completed_topics }}</strong></article>
+  <article class="stat"><span>Quiz accuracy</span><strong>{{ progress.quiz_accuracy }}%</strong></article><article class="stat"><span>Cards reviewed</span><strong>{{ progress.flashcards_reviewed }}</strong></article>
+</section>
+<section class="panel"><h2>Topic status</h2>{% if progress.topics %}{% for item in progress.topics %}<div class="list-row"><div><strong>{{ item.topic }}</strong><small>{{ item.last_studied or "Not studied yet" }}</small></div><form action="/progress" method="post" class="inline-form"><input type="hidden" name="topic" value="{{ item.topic }}"><select name="status"><option value="pending" {% if item.status == "pending" %}selected{% endif %}>Pending</option><option value="completed" {% if item.status == "completed" %}selected{% endif %}>Completed</option><option value="needs_revision" {% if item.status == "needs_revision" %}selected{% endif %}>Needs revision</option></select><button class="button button-secondary button-small" type="submit">Save</button></form></div>{% endfor %}{% else %}<p class="empty">Upload PDFs to start tracking study topics.</p>{% endif %}</section>
+{% endblock %}

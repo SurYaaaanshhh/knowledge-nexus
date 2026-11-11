@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div><p class="eyebrow">STUDY WORKSPACE</p><h1>Study smarter with document-grounded knowledge.</h1><p class="muted">Your PDFs, verified facts, and revision tools—connected in one place.</p></div>
+  <a class="button button-primary" href="/library">Upload PDFs</a>
+</section>
+<section class="stats">
+  <article class="stat"><span>Uploaded PDFs</span><strong>{{ stats.documents }}</strong></article>
+  <article class="stat"><span>Verified facts</span><strong>{{ stats.facts }}</strong></article>
+  <article class="stat"><span>Topics</span><strong>{{ stats.topics }}</strong></article>
+  <article class="stat"><span>Graph links</span><strong>{{ stats.graph_links }}</strong></article>
+</section>
+<div class="columns">
+  <section class="panel">
+    <div class="section-heading"><h2>Recently uploaded</h2><a href="/library">View library →</a></div>
+    {% if documents %}
+      {% for doc in documents %}<div class="list-row"><div><strong>{{ doc.filename }}</strong><small>{{ doc.status }} · {{ doc.page_count }} pages</small></div><a href="/reader?doc={{ doc.id }}">Open →</a></div>{% endfor %}
+    {% else %}<p class="empty">No PDFs yet. Upload a study document to get started.</p>{% endif %}
+  </section>
+  <section class="panel"><div class="section-heading"><h2>Study tools</h2></div>
+    <div class="tool-grid">
+      <a href="/chat">Ask a question<span>Evidence-backed answers</span></a><a href="/quiz">Quiz practice<span>Test source facts</span></a>
+      <a href="/revision">Revision notes<span>Download printable notes</span></a><a href="/flashcards">Flashcards<span>Review and track progress</span></a>
+      <a href="/graph">Knowledge graph<span>Explore connected concepts</span></a><a href="/exam-traps">Exam traps<span>Compare related facts</span></a>
+    </div>
+  </section>
+</div>
+{% if updates %}<section class="panel"><h2>Related updates across your PDFs</h2>
+  {% for update in updates %}<div class="update-row"><p>{{ update.description }}</p><div><a href="{{ update.old.source_url }}">{{ update.old.object }} · {{ update.old.document_name }}, p.{{ update.old.page_number }}</a><a href="{{ update.new.source_url }}">{{ update.new.object }} · {{ update.new.document_name }}, p.{{ update.new.page_number }}</a></div></div>{% endfor %}
+</section>{% endif %}
+{% endblock %}

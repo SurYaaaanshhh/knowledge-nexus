@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">REVISION WORKSPACE</p><h1>Build printable revision notes</h1><p class="muted">Notes include citations to the original document and page.</p></section>
+<section class="panel"><form action="/revision" method="post" class="filter-form">
+  <label>Topic<select name="topic" required>{% for topic in topics %}<option value="{{ topic }}">{{ topic }}</option>{% endfor %}</select></label>
+  <label>Detail<select name="mode"><option value="quick">Quick</option><option value="detailed">Detailed</option></select></label>
+  <button class="button button-primary" type="submit">Create notes</button>
+</form>{% if not topics %}<p class="empty">Upload PDFs with supported facts to create revision notes.</p>{% endif %}</section>
+{% for note in notes %}<section class="panel"><div class="section-heading"><h2>{{ note.topic }} · {{ note.mode|title }}</h2><a class="button button-secondary button-small" href="/revision/{{ note.id }}/pdf">Download PDF</a></div>
+  {% for fact in note.facts %}<div class="fact"><p>{{ fact.text }}</p><a href="{{ fact.source_url }}">Source: {{ fact.document_name }}, page {{ fact.page_number }}</a></div>{% endfor %}
+</section>{% endfor %}
+{% endblock %}

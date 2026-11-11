@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">PDF LIBRARY</p><h1>Upload and manage study PDFs</h1><p class="muted">Documents are private to your account and stored locally.</p></section>
+<section class="panel">
+  <form action="/library/upload" method="post" enctype="multipart/form-data" class="upload-form">
+    <label class="file-picker">Choose PDF files<input type="file" name="files" accept="application/pdf,.pdf" multiple required></label>
+    <button class="button button-primary" type="submit">Upload and process</button>
+  </form>
+  {% if error %}<p role="alert" class="alert">{{ error }}</p>{% endif %}
+</section>
+<section class="panel"><div class="section-heading"><h2>Your documents</h2><span class="muted">{{ documents|length }} total</span></div>
+  {% if documents %}{% for doc in documents %}
+  <div class="list-row"><div><strong>{{ doc.filename }}</strong><small>{{ doc.status }} · {{ doc.page_count }} pages · {{ doc.uploaded_at }}</small></div><div class="row-actions"><a href="/reader?doc={{ doc.id }}">Reader</a><a href="/api/documents/{{ doc.id }}/file" target="_blank" rel="noreferrer">Open PDF</a></div></div>
+  {% endfor %}{% else %}<p class="empty">No documents uploaded yet.</p>{% endif %}
+</section>
+{% endblock %}

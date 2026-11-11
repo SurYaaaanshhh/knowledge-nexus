@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#020617">
+    <title>{% block title %}Knowledge Nexus{% endblock %}</title>
+    <link rel="stylesheet" href="/static/app.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="brand-mark">K</span>
+        <span><strong>Knowledge Nexus</strong><small>PDF to graph intelligence</small></span>
+      </a>
+      {% if user %}
+      <nav class="navigation" aria-label="Main navigation">
+        <a href="/">Dashboard</a><a href="/library">Library</a><a href="/reader">Reader</a>
+        <a href="/search">Search</a><a href="/graph">Graph</a><a href="/chat">AI Chat</a>
+        <a href="/quiz">Quiz</a><a href="/revision">Revision</a><a href="/flashcards">Flashcards</a>
+        <a href="/exam-traps">Exam Traps</a><a href="/progress">Progress</a>
+      </nav>
+      <div class="account">
+        <span title="{{ user.email }}">{{ user.email }}</span>
+        <form action="/logout" method="post"><button class="button button-quiet button-small" type="submit">Sign out</button></form>
+      </div>
+      {% endif %}
+    </header>
+    <main class="page">
+      {% if notice %}<div class="notice" role="status">{{ notice }}</div>{% endif %}
+      {% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+      {% block content %}{% endblock %}
+      <footer>Knowledge Nexus <span>Private study workspace · Your account data stays separate</span></footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">SOURCE SEARCH</p><h1>Search your study documents</h1><p class="muted">Find relevant passages and facts from your private PDFs.</p></section>
+<form action="/search" method="post" class="search-form"><input name="q" value="{{ q }}" required placeholder="Search a topic, organization, or fact"><button class="button button-primary" type="submit">Search</button></form>
+{% if q %}<section class="panel"><h2>Results for “{{ q }}”</h2>
+  {% if results %}{% for result in results %}<article class="fact"><div class="fact-title"><strong>{{ result.title }}</strong><span class="tag">{{ result.match_type }}</span></div><p>{{ result.snippet }}</p><a href="/reader?doc={{ result.document_id }}&page={{ result.page_number }}">Open {{ result.document_name }} · page {{ result.page_number }}</a></article>{% endfor %}
+  {% else %}<p class="empty">No matching source material was found.</p>{% endif %}
+</section>{% endif %}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-heading"><p class="eyebrow">EVIDENCE-BASED CHAT</p><h1>Ask about your uploaded PDFs</h1><p class="muted">Answers are assembled from supported facts; missing evidence is clearly identified.</p></section>
+<form action="/chat" method="post" class="search-form"><input name="question" value="{{ question }}" required placeholder="Which banks launched cards?"><button class="button button-primary" type="submit">Ask</button></form>
+{% if answer %}<section class="panel answer-panel"><span class="eyebrow">{{ "ANSWER" if answer.status == "success" else "NO SOURCE FOUND" }}</span><h2>{{ answer.answer }}</h2>
+  {% if answer.citations %}<h3>Sources</h3>{% for citation in answer.citations %}<a class="citation" href="{{ citation.source_url }}"> {{ citation.document_name }} · page {{ citation.page_number }}<small>{{ citation.snippet }}</small></a>{% endfor %}{% endif %}
+</section>{% endif %}
+{% endblock %}
